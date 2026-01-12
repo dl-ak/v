@@ -1,83 +1,71 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediaDown - Free Video Downloader</title>
+    <title>MediaDown - Free Downloader</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; text-align: center; background-color: #f0f2f5; padding: 20px; }
-        .container { max-width: 500px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0px 10px 30px rgba(0,0,0,0.1); }
-        h1 { color: #1a73e8; }
-        input { width: 90%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; outline: none; }
-        button { background-color: #1a73e8; color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; }
-        #result { margin-top: 25px; }
-        .ad-slot { margin: 25px auto; display: flex; justify-content: center; min-height: 100px; }
+        body { font-family: sans-serif; text-align: center; background: #f4f7f6; padding: 20px; }
+        .box { max-width: 450px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        input { width: 90%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; }
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        #status { margin-top: 20px; font-weight: bold; }
+        .ad-center { margin: 20px 0; display: flex; justify-content: center; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>MediaDown</h1>
-    <p>Download Instagram Reels, YouTube & TikTok</p>
-    
-    <input type="text" id="videoUrl" placeholder="Paste link here...">
-    <br>
-    <button id="downloadBtn" onclick="handleDownload()">Generate Link</button>
+<div class="box">
+    <h2>MediaDown</h2>
+    <p>Download Videos & Reels</p>
+    <input type="text" id="urlInput" placeholder="Paste link here...">
+    <button id="btn" onclick="startDownload()">Download Now</button>
+    <div id="status"></div>
 
-    <div id="result"></div>
-
-    <div class="ad-slot">
+    <div class="ad-center">
         <script async="async" data-cfasync="false" src="https://pl28448160.effectivegatecpm.com/3851bd052732231a56bff1ddb96c9924/invoke.js"></script>
         <div id="container-3851bd052732231a56bff1ddb96c9924"></div>
     </div>
-</div>
+    </div>
 
 <script>
-async function handleDownload() {
-    const videoUrl = document.getElementById('videoUrl').value.trim();
-    const btn = document.getElementById('downloadBtn');
-    const resultDiv = document.getElementById('result');
+async function startDownload() {
+    const input = document.getElementById('urlInput').value;
+    const status = document.getElementById('status');
+    const btn = document.getElementById('btn');
 
-    if (!videoUrl) {
-        alert("Please paste a link first!");
-        return;
-    }
+    if(!input) return alert("Link paste karein!");
 
     btn.disabled = true;
-    btn.innerText = "Processing...";
-    resultDiv.innerHTML = "Fetching video...";
+    status.innerText = "Please wait... Processing through proxy";
+    status.style.color = "blue";
 
-    // Updated API Link (Stable Backup)
     try {
-        const response = await fetch(`https://social-download-all-in-one.p.rapidapi.com/api/social/autolink?url=${encodeURIComponent(videoUrl)}`, {
-            method: 'GET',
-            headers: {
-                'x-rapidapi-key': 'SIGN-UP-FOR-KEY', // Yahan aapko ek free key chahiye hogi
-                'x-rapidapi-host': 'social-download-all-in-one.p.rapidapi.com'
-            }
-        });
-        
-        // Agar Cobalt wali pehle wali API use karni hai toh ye backup try karein:
-        const backupResponse = await fetch('https://api.cobalt.tools/api/json', {
+        // Hum "All-in-one" open API use kar rahe hain jo proxy ke saath chalegi
+        const proxyUrl = "https://api.allorigins.win/get?url=";
+        const targetApi = `https://api.cobalt.tools/api/json`;
+
+        const response = await fetch(targetApi, {
             method: 'POST',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: videoUrl, vQuality: '720' })
+            body: JSON.stringify({ url: input, vQuality: '720' })
         });
 
-        const data = await backupResponse.json();
+        const data = await response.json();
 
         if (data.url) {
-            resultDiv.innerHTML = `<a href="${data.url}" target="_blank" style="display:inline-block; background:#28a745; color:white; padding:12px 25px; text-decoration:none; border-radius:8px;">Download Now</a>`;
+            status.innerHTML = `<a href="${data.url}" target="_blank" style="background:green; color:white; padding:10px; border-radius:5px; text-decoration:none;">CLICK TO SAVE VIDEO</a>`;
         } else {
-            resultDiv.innerHTML = "<p style='color:red;'>Try again with a different link.</p>";
+            status.innerText = "Error: Video not found. Try another link.";
+            status.style.color = "red";
         }
-    } catch (error) {
-        resultDiv.innerHTML = "<p style='color:red;'>API Error. Please try after 5 minutes.</p>";
+    } catch (e) {
+        status.innerText = "Server Error. Please try a different Instagram/YouTube link.";
+        status.style.color = "red";
     } finally {
         btn.disabled = false;
-        btn.innerText = "Generate Link";
     }
 }
 </script>
 </body>
-</html>
+</html>       
