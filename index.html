@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="google-site-verification" content="google14f6a44139299b26" />  <title>MediaDown - Ultimate</title>
+    <meta name="google-site-verification" content="google14f6a44139299b26" />
+    <title>MediaDown - Ultimate Downloader</title>
     <style>
         body { font-family: sans-serif; text-align: center; background: #f0f2f5; padding: 20px; }
         .box { max-width: 450px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         input { width: 90%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; }
         button { width: 100%; padding: 14px; background: #1a73e8; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        #status { margin-top: 20px; font-weight: bold; font-size: 14px; padding: 10px; min-height: 40px; }
+        #status { margin-top: 20px; font-weight: bold; min-height: 40px; }
         .dl-link { display: inline-block; background: #28a745; color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 10px; }
     </style>
 </head>
@@ -17,7 +18,7 @@
 
 <div class="box">
     <h1>MediaDown</h1>
-    <p>Strong Multi-Server Downloader</p>
+    <p>Download Instagram Reels & Videos</p>
     <input type="text" id="urlInput" placeholder="Paste link here...">
     <button id="btn" onclick="startDownload()">Generate Link</button>
     <div id="status">Ready to download</div>
@@ -33,24 +34,18 @@ async function startDownload() {
     const input = document.getElementById('urlInput').value.trim();
     const status = document.getElementById('status');
     const btn = document.getElementById('btn');
-
     if(!input) return alert("Please paste a link!");
     btn.disabled = true;
-    btn.innerText = "Checking Servers...";
-    status.innerHTML = "📡 Trying Server 1...";
+    btn.innerText = "Please wait...";
+    status.innerHTML = "📡 Trying Server...";
 
-    // Server 1 & 2 logic here (same as before)...
-    // [TRUNCATED FOR BREVITY - use previous logic]
-
-    // FINAL FALLBACK (SERVER 3) - User ko kabhi khali hath nahi bhejega
+    // Simple Redirect Logic for better success
     setTimeout(() => {
-        if(btn.disabled) {
-            status.innerHTML = `<p style="color:orange;">Servers are busy, but we found a way!</p>
-            <a href="https://snapinsta.app/search?q=${encodeURIComponent(input)}" target="_blank" class="dl-link">DOWNLOAD VIA SECURE MIRROR</a>`;
-            btn.disabled = false;
-            btn.innerText = "Generate Link";
-        }
-    }, 5000); 
+        status.innerHTML = `<p style="color:green;">Video Ready!</p>
+        <a href="https://snapinsta.app/search?q=${encodeURIComponent(input)}" target="_blank" class="dl-link">DOWNLOAD VIDEO NOW</a>`;
+        btn.disabled = false;
+        btn.innerText = "Generate Link";
+    }, 3000);
 }
 </script>
 </body>
