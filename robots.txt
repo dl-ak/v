@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://amankhan07749-max.github.io/My-downloader/sitemap.xml
