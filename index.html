@@ -3,76 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediaDown - Best Video Downloader</title>
+    <title>MediaDown - Multi-Server Downloader</title>
     <style>
-        body { font-family: sans-serif; text-align: center; background: #f4f7f6; padding: 20px; }
-        .box { max-width: 450px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        input { width: 90%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; }
-        button { width: 100%; padding: 12px; background: #1a73e8; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; background: #f4f7f6; padding: 20px; }
+        .box { max-width: 450px; margin: auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        input { width: 90%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; }
+        button { width: 100%; padding: 14px; background: #1a73e8; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
         #status { margin-top: 20px; font-weight: bold; font-size: 14px; }
         .ad-center { margin: 25px 0; display: flex; justify-content: center; min-height: 100px; }
-        .dl-link { display: inline-block; background: #28a745; color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; margin-top: 10px; }
+        .dl-link { display: inline-block; background: #28a745; color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="box">
-    <h2>MediaDown</h2>
-    <p>Download Videos & Reels Free</p>
-    <input type="text" id="urlInput" placeholder="Paste link here (Instagram/YouTube)...">
-    <button id="btn" onclick="downloadVideo()">Generate Link</button>
-    
+    <h1>MediaDown</h1>
+    <p>Strong Multi-Server Downloader</p>
+    <input type="text" id="urlInput" placeholder="Paste link here...">
+    <button id="btn" onclick="startDownload()">Download Now</button>
     <div id="status"></div>
 
     <div class="ad-center">
         <script async="async" data-cfasync="false" src="https://pl28448160.effectivegatecpm.com/3851bd052732231a56bff1ddb96c9924/invoke.js"></script>
         <div id="container-3851bd052732231a56bff1ddb96c9924"></div>
     </div>
-    </div>
+</div>
 
 <script>
-async function downloadVideo() {
+async function startDownload() {
     const input = document.getElementById('urlInput').value.trim();
     const status = document.getElementById('status');
     const btn = document.getElementById('btn');
 
-    if(!input) return alert("Please paste a link first!");
+    if(!input) return alert("Please paste a link!");
 
     btn.disabled = true;
     btn.innerText = "Processing...";
-    status.innerHTML = "Fetching video details...";
-    status.style.color = "#1a73e8";
+    status.innerHTML = "Checking Server 1...";
+    status.style.color = "blue";
 
+    // --- SERVER 1 (Cobalt) ---
     try {
-        // Method: Using a more stable open-source fetcher
-        const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://co.wuk.sh/api/json')}`, {
+        const res1 = await fetch('https://api.cobalt.tools/api/json', {
             method: 'POST',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
             body: JSON.stringify({ url: input, vQuality: '720' })
         });
-        
-        // Agar direct fetch block ho, toh hum alternative try karte hain
-        const res = await fetch('https://api.cobalt.tools/api/json', {
-            method: 'POST',
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: input, vQuality: '720' })
-        });
-        
-        const data = await res.json();
+        const data1 = await res1.json();
 
-        if (data.url) {
-            status.innerHTML = `<p style="color:green;">Video Ready!</p><a href="${data.url}" class="dl-link" target="_blank">DOWNLOAD NOW</a>`;
-        } else {
-            status.innerText = "Error: Video not found or link private.";
-            status.style.color = "red";
+        if (data1.url) {
+            showLink(data1.url);
+            return;
         }
     } catch (e) {
-        status.innerText = "Service Busy. Please try again with another link.";
-        status.style.color = "red";
-    } finally {
-        btn.disabled = false;
-        btn.innerText = "Generate Link";
+        console.log("Server 1 failed, trying Server 2...");
     }
+
+    // --- SERVER 2 (AIO API) ---
+    status.innerHTML = "Server 1 Busy, Trying Server 2...";
+    try {
+        const res2 = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://api.fabdl.com/instagram/get-video-info?url=' + input)}`);
+        const data2 = await res2.json();
+        const finalData = JSON.parse(data2.contents);
+
+        if (finalData.result && finalData.result.download_url) {
+            showLink(finalData.result.download_url);
+            return;
+        }
+    } catch (e) {
+        console.log("Server 2 failed.");
+    }
+
+    status.innerHTML = "<span style='color:red;'>Both servers busy. Try again with a different link.</span>";
+    btn.disabled = false;
+    btn.innerText = "Download Now";
+}
+
+function showLink(url) {
+    const status = document.getElementById('status');
+    const btn = document.getElementById('btn');
+    status.innerHTML = `<p style="color:green;">Video Found!</p><a href="${url}" target="_blank" class="dl-link">DOWNLOAD VIDEO</a>`;
+    btn.disabled = false;
+    btn.innerText = "Download Now";
 }
 </script>
 </body>
