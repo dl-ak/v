@@ -1,74 +1,48 @@
-// HTML elements ko select karna
-const downloadBtn = document.querySelector('#downloadBtn');
-const inputField = document.querySelector('#videoUrl');
-const resultDiv = document.querySelector('#result');
+async function handleDownload() {
+    const videoUrl = document.getElementById('videoUrl').value.trim();
+    const btn = document.getElementById('downloadBtn');
+    const resultDiv = document.getElementById('result');
 
-downloadBtn.addEventListener('click', async () => {
-    const reelUrl = inputField.value.trim();
-
-    // 1. Validating Input
-    if (!reelUrl || !reelUrl.includes('instagram.com')) {
-        alert("Please paste a valid Instagram Reel link!");
+    if (!videoUrl) {
+        alert("Please paste a link first!");
         return;
     }
 
-    // 2. Loading State
-    downloadBtn.innerText = "Processing...";
-    downloadBtn.disabled = true;
-    resultDiv.innerHTML = "Fetching video details...";
-
-    // 3. API Configuration (Using your Key and Host)
-    // Hum '/post_info' use kar rahe hain reel ka data nikalne ke liye
-    const apiUrl = `https://instagram-downloader-scraper-reels-igtv-posts-stories.p.rapidapi.com/post_info?url=${encodeURIComponent(reelUrl)}`;
-    
-    const options = {
-        method: 'GET',
-        headers: {
-            'x-rapidapi-key': '296ebfd70cmshdb3ed8562b069ddp128294jsncb7c7c57a4df',
-            'x-rapidapi-host': 'instagram-downloader-scraper-reels-igtv-posts-stories.p.rapidapi.com'
-        }
-    };
+    btn.disabled = true;
+    btn.innerText = "Processing...";
+    resultDiv.innerHTML = "Fetching video link...";
 
     try {
-        const response = await fetch(apiUrl, options);
+        // Method: Direct Download Link Service
+        const apiUrl = `https://api.fabdl.com/instagram/get-video-info?url=${encodeURIComponent(videoUrl)}`;
         
-        // Agar response 403 hai toh matlab subscription activate nahi hai
-        if (response.status === 403) {
-            resultDiv.innerHTML = "<p style='color:red;'>Error: API Key invalid hai ya subscribe nahi kiya.</p>";
-            return;
-        }
-
+        const response = await fetch(apiUrl);
         const data = await response.json();
-        console.log("API Result:", data); // Isse Spck Console mein check karein
 
-        // 4. Video Link Nikalna
-        // Is API ka data structure check karke link nikalna
-        let videoLink = "";
-        if (data.data && data.data.video_url) {
-            videoLink = data.data.video_url;
-        } else if (data.video_url) {
-            videoLink = data.video_url;
-        }
-
-        // 5. Success Message aur Download Button
-        if (videoLink) {
+        if (data.result && data.result.download_url) {
             resultDiv.innerHTML = `
-                <div style="margin-top:20px; text-align:center;">
-                    <p style="color:green; font-weight:bold;">Video Found!</p>
-                    <a href="${videoLink}" target="_blank" 
-                       style="display:inline-block; background:#E1306C; color:white; padding:12px 20px; text-decoration:none; border-radius:5px; font-weight:bold;">
-                       DOWNLOAD NOW
-                    </a>
+                <div style="background: #e8f0fe; padding: 15px; border-radius: 8px;">
+                    <a href="${data.result.download_url}" target="_blank" style="display:inline-block; background:#28a745; color:white; padding:12px 25px; text-decoration:none; border-radius:8px; font-weight:bold;">Download Now</a>
                 </div>`;
         } else {
-            resultDiv.innerHTML = "<p style='color:red;'>Error: Video link nahi mila. Check karein ki post public hai.</p>";
+            // Agar pehli API fail ho, toh backup Cobalt par jaye
+            const backupResponse = await fetch('https://api.cobalt.tools/api/json', {
+                method: 'POST',
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: videoUrl, vQuality: '720' })
+            });
+            const backupData = await backupResponse.json();
+            
+            if (backupData.url) {
+                resultDiv.innerHTML = `<a href="${backupData.url}" target="_blank" style="display:inline-block; background:#28a745; color:white; padding:12px 25px; text-decoration:none; border-radius:8px;">Download Video</a>`;
+            } else {
+                resultDiv.innerHTML = "<p style='color:red;'>Link Not Supported. Please try another link.</p>";
+            }
         }
-
     } catch (error) {
-        console.error("Fetch Error:", error);
-        resultDiv.innerHTML = "<p style='color:red;'>Server Error! Connection check karein.</p>";
+        resultDiv.innerHTML = "<p style='color:red;'>Server busy. Please try again in 1 minute.</p>";
     } finally {
-        downloadBtn.innerText = "Download Now";
-        downloadBtn.disabled = false;
+        btn.disabled = false;
+        btn.innerText = "Generate Link";
     }
-});
+            }
