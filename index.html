@@ -1,13 +1,15 @@
-<!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="YOUR_CODE_HERE" />
     <title>MediaDown - Free Instagram Reels & Video Downloader</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/dist/css/all.min.css">
     <style>
         .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        #ad-slot { min-height: 250px; } /* Ads ke liye jagah reserve rakhi hai */
     </style>
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
@@ -28,7 +30,7 @@
                 <input type="text" id="urlInput" placeholder="Paste Instagram link here..." 
                     class="w-full px-4 py-3 border-2 border-purple-200 rounded-lg focus:outline-none focus:border-purple-500 transition duration-300">
                 
-                <div class="my-4 text-center">
+                <div id="ad-slot" class="my-4 text-center border border-dashed border-gray-200 rounded">
                     <script async="async" data-cfasync="false" src="https://pl28488273.effectivegatecpm.com/b58e849e9a81ffe059187ea44bedd8b8/invoke.js"></script>
                     <div id="container-b58e849e9a81ffe059187ea44bedd8b8"></div>
                 </div>
@@ -40,11 +42,11 @@
 
             <div id="loader" class="hidden mt-8 text-center">
                 <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500"></div>
-                <p class="mt-2 text-gray-600 font-medium">Processing your request...</p>
+                <p class="mt-2 text-gray-600 font-medium">Searching for video...</p>
             </div>
 
-            <div id="downloadResult" class="hidden mt-8 p-4 bg-green-50 border-2 border-green-200 rounded-lg text-center">
-                <p class="text-green-700 font-bold mb-4">Video found successfully!</p>
+            <div id="downloadResult" class="hidden mt-8 p-4 bg-green-50 border-2 border-green-200 rounded-lg text-center animate-bounce">
+                <p class="text-green-700 font-bold mb-4">Video found!</p>
                 <a href="https://pl28169145.effectivegatecpm.com/71/34/4a/71344aa1039864227301f2f01f010375.external?cb=YOUR_CB_HERE" 
                    class="inline-block bg-green-600 text-white font-bold py-2 px-6 rounded-full hover:bg-green-700 transition duration-300">
                    <i class="fas fa-cloud-download-alt mr-2"></i> Download Server 1 (Fast)
@@ -52,22 +54,21 @@
             </div>
         </div>
 
-        <div class="max-w-2xl mx-auto mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-            <div class="p-4"><i class="fas fa-copy text-purple-500 text-3xl mb-2"></i><h3 class="font-bold">Copy Link</h3><p class="text-sm text-gray-600">Copy the URL of Instagram Reel.</p></div>
-            <div class="p-4"><i class="fas fa-paste text-purple-500 text-3xl mb-2"></i><h3 class="font-bold">Paste URL</h3><p class="text-sm text-gray-600">Paste it in the box above.</p></div>
-            <div class="p-4"><i class="fas fa-check-circle text-purple-500 text-3xl mb-2"></i><h3 class="font-bold">Download</h3><p class="text-sm text-gray-600">Click download and enjoy!</p></div>
+        <div class="max-w-2xl mx-auto mt-12 text-center">
+            <h3 class="text-xl font-semibold text-gray-700">Free Instagram Downloader</h3>
+            <p class="text-gray-500 mt-2">Download Instagram Reels, Videos, and Photos for free in high quality. No registration required.</p>
         </div>
     </div>
 
     <footer class="mt-12 py-6 border-t border-gray-200 text-center text-gray-500 text-sm">
-        <p>&copy; 2024 MediaDown. Made for you.</p>
+        <p>&copy; 2024 MediaDown | <a href="sitemap.xml" class="hover:underline">Sitemap</a></p>
     </footer>
 
     <script>
         function simulateDownload() {
             const urlInput = document.getElementById('urlInput').value;
             if (!urlInput) {
-                alert('Please paste a valid link!');
+                alert('Please paste a link first!');
                 return;
             }
             
@@ -77,8 +78,8 @@
             setTimeout(() => {
                 document.getElementById('loader').classList.add('hidden');
                 document.getElementById('downloadResult').classList.remove('hidden');
-            }, 2000);
+            }, 1500);
         }
     </script>
 </body>
-                    </html>
+                    </html>         
